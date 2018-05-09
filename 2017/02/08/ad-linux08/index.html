@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/fv1.ico?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/fv1.ico?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/fv1.ico?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/fv1.ico?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Linux,PuTTy," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Learnit" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="SSH (Secure Shell)，为远程登录会话和其他网络服务提供加密传输和使用环境。传统的网络服务都是明文传输(如Telnet，FTP)，包括明文数据、明文用户名和密码，极易受到中间人攻击。SSH目前是比较可靠的通讯方式；同时，SSH压缩其传输的数据，可以加快传输速度，是目前最为常用的远程登录(代替Telnet)和文件传输(SFTP代替FTP)工具。本文介绍相关Linux下SSH服务及客户端">
+<meta name="keywords" content="Linux,PuTTy">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux进阶08：SSH相关操作">
+<meta property="og:url" content="http://higoge.github.io/2017/02/08/ad-linux08/index.html">
+<meta property="og:site_name" content="Learnit">
+<meta property="og:description" content="SSH (Secure Shell)，为远程登录会话和其他网络服务提供加密传输和使用环境。传统的网络服务都是明文传输(如Telnet，FTP)，包括明文数据、明文用户名和密码，极易受到中间人攻击。SSH目前是比较可靠的通讯方式；同时，SSH压缩其传输的数据，可以加快传输速度，是目前最为常用的远程登录(代替Telnet)和文件传输(SFTP代替FTP)工具。本文介绍相关Linux下SSH服务及客户端">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://raw.githubusercontent.com/higoge/image/master/adlinux/16.png">
+<meta property="og:updated_time" content="2017-12-11T08:07:35.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux进阶08：SSH相关操作">
+<meta name="twitter:description" content="SSH (Secure Shell)，为远程登录会话和其他网络服务提供加密传输和使用环境。传统的网络服务都是明文传输(如Telnet，FTP)，包括明文数据、明文用户名和密码，极易受到中间人攻击。SSH目前是比较可靠的通讯方式；同时，SSH压缩其传输的数据，可以加快传输速度，是目前最为常用的远程登录(代替Telnet)和文件传输(SFTP代替FTP)工具。本文介绍相关Linux下SSH服务及客户端">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/higoge/image/master/adlinux/16.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.3',
+    sidebar: {"display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://higoge.github.io/2017/02/08/ad-linux08/"/>
+
+
+
+
+
+  <title>Linux进阶08：SSH相关操作 | Learnit</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+
+  <div class="container  page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Learnit</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">挨踢汪汪的杂货店</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://higoge.github.io/2017/02/08/ad-linux08/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="挨踢汪汪 (Jeremy Wong)">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/author.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Learnit">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Linux进阶08：SSH相关操作</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-02-08T21:03:30+08:00">
+                2017-02-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux进阶/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux进阶</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>SSH (Secure Shell)，为远程登录会话和其他网络服务提供加密传输和使用环境。传统的网络服务都是明文传输(如Telnet，FTP)，包括明文数据、明文用户名和密码，极易受到中间人攻击。SSH目前是比较可靠的通讯方式；同时，SSH压缩其传输的数据，可以加快传输速度，是目前最为常用的远程登录(代替Telnet)和文件传输(SFTP代替FTP)工具。本文介绍相关Linux下SSH服务及客户端的配置以及SSH相关命令。<br><a id="more"></a><br>之前的博客有提到过SSH的文章如下：</p>
+<ul>
+<li><a href="http://higoge.github.io/2015/07/15/tools01/">工具01：Cygwin的安装配置</a>：Cygwin中安装SSH。</li>
+<li><a href="http://higoge.github.io/2015/07/23/tools03/">工具03：PuTTY常用配置</a>：Windows的SSH工具。</li>
+<li><a href="http://higoge.github.io/2015/07/24/tools04/">工具04：PuTTY的小伙伴PuTTYgen和Plink</a>：Windows下的SSH密钥生成器。</li>
+<li><a href="http://higoge.github.io/2016/02/15/tools09/#Sftp_u63D2_u4EF6">工具09：资源管理器替代者：Total Commander</a>：TC的Sftp插件。</li>
+<li><a href="http://higoge.github.io/2017/02/04/ad-linux07/#u4F7F_u7528SSH_u96A7_u9053_u52A0_u5BC6">Linux进阶07：Linux远程桌面配置</a>：SSH隧道。</li>
+</ul>
+<h2 id="SSH的安全验证"><a href="#SSH的安全验证" class="headerlink" title="SSH的安全验证"></a>SSH的安全验证</h2><p>SSH提供两种级别的安全验证。</p>
+<ul>
+<li>第一种级别（基于密码的安全验证），知道帐号和密码，就可以登录到远程主机，并且所有传输的数据都会被加密。但是，可能会有别的服务器在冒充真正的服务器，无法避免被“中间人”攻击。</li>
+<li>第二种级别（基于密钥的安全验证），需要依靠密钥，也就是你必须为自己创建一对密钥，并把公有密钥放在需要访问的服务器上。客户端软件会向服务器发出请求，请求用你的密钥进行安全验证。服务器收到请求之后，先在你在该服务器的用户根目录下寻找你的公有密钥，然后把它和你发送过来的公有密钥进行比较。如果两个密钥一致，服务器就用公有密钥加密“质询”（challenge）并把它发送给客户端软件。从而避免被“中间人”攻击。<br>以上内容来自<a href="https://zh.wikipedia.org/wiki/Secure_Shell" target="_blank" rel="noopener">维基百科</a>。</li>
+</ul>
+<h2 id="SSH服务端公有密钥查询和比对"><a href="#SSH服务端公有密钥查询和比对" class="headerlink" title="SSH服务端公有密钥查询和比对"></a>SSH服务端公有密钥查询和比对</h2><p>服务端执行如下命令，查询公有密钥(fingerprint)。默认是通过SHA256的形式展现，可以使用<code>ssh-keygen</code>的<code>-E md5</code>参数，改变公有密钥显示方式为MD5。为了避免中间人攻击，可以提前把公有密钥发送个客户端，以便进行对照。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="keyword">for</span> file <span class="keyword">in</span> /etc/ssh/*sa_key.pub; <span class="keyword">do</span> ssh-keygen -lf <span class="variable">$file</span>; <span class="keyword">done</span></span><br><span class="line">1024 SHA256:7fEJPt+wnqW89TeckoMFEMuj6rLXAjgwup2cgfXRY/0 root@Arch (DSA)</span><br><span class="line">256 SHA256:fbk0IHk1RAOWFFmN4TC7qgqIGTJ1lYvxRsiAjWOdzVc root@Arch (ECDSA)</span><br><span class="line">2048 SHA256:QP5Ku0CIEclNQQwgTguQMOXWugyVfiVsIT7MFlPOynE root@Arch (RSA)</span><br><span class="line"></span><br><span class="line">$ <span class="keyword">for</span> file <span class="keyword">in</span> /etc/ssh/*sa_key.pub; <span class="keyword">do</span> ssh-keygen -E md5 -lf <span class="variable">$file</span>; <span class="keyword">done</span></span><br><span class="line">1024 MD5:a4:93:01:1c:f2:e4:de:c3:b8:92:0e:b5:0e:12:5f:81 root@Arch (DSA)</span><br><span class="line">256 MD5:1d:f8:f6:1c:6f:10:a1:<span class="built_in">fc</span>:50:f5:87:e2:da:e9:29:84 root@Arch (ECDSA)</span><br><span class="line">2048 MD5:19:53:68:4f:df:3f:56:8a:9f:5b:4e:7e:30:be:d7:63 root@Arch (RSA)</span><br></pre></td></tr></table></figure></p>
+<p><strong>注</strong>：CentOS6.5默认使用MD5的方式进行显示，并且不支持<code>-E</code>参数。</p>
+<p>PuTTY客户端<strong>首次</strong>登录服务端的公有密钥对比，采用的是MD5的方式。通讯密钥是RSA。<br><img src="https://raw.githubusercontent.com/higoge/image/master/adlinux/16.png" alt="16.png"></p>
+<p>ssh命令(如Windows的Cygwin)<strong>首次</strong>登录也可以进行公有密钥对比，默认是SHA256的形式。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ ssh 192.168.80.23</span><br><span class="line">The authenticity of host <span class="string">'192.168.80.23 (192.168.80.23)'</span> can<span class="string">'t be established.</span></span><br><span class="line"><span class="string">ECDSA key fingerprint is SHA256:fbk0IHk1RAOWFFmN4TC7qgqIGTJ1lYvxRsiAjWOdzVc.</span></span><br><span class="line"><span class="string">Are you sure you want to continue connecting (yes/no)?</span></span><br></pre></td></tr></table></figure></p>
+<p>或者指定为MD5的形式。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ ssh -o FingerprintHash=md5 192.168.80.23</span><br><span class="line">The authenticity of host <span class="string">'192.168.80.23 (192.168.80.23)'</span> can<span class="string">'t be established.</span></span><br><span class="line"><span class="string">ECDSA key fingerprint is MD5:1d:f8:f6:1c:6f:10:a1:fc:50:f5:87:e2:da:e9:29:84.</span></span><br><span class="line"><span class="string">Are you sure you want to continue connecting (yes/no)?</span></span><br></pre></td></tr></table></figure></p>
+<p>在<code>~/.ssh/known_hosts</code>中会保存登录过的服务器的公有密钥信息，可以通过如下命令进行查询和比对。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-keygen -F 192.168.80.23 -l</span><br><span class="line"><span class="comment"># Host 192.168.80.23 found: line 1</span></span><br><span class="line">192.168.80.23 ECDSA SHA256:fbk0IHk1RAOWFFmN4TC7qgqIGTJ1lYvxRsiAjWOdzVc</span><br><span class="line"></span><br><span class="line">$ ssh-keygen -F 192.168.80.23 -l -E md5</span><br><span class="line"><span class="comment"># Host 192.168.80.23 found: line 1</span></span><br><span class="line">192.168.80.23 ECDSA MD5:1d:f8:f6:1c:6f:10:a1:<span class="built_in">fc</span>:50:f5:87:e2:da:e9:29:84</span><br></pre></td></tr></table></figure></p>
+<h2 id="SSH客户端常用命令"><a href="#SSH客户端常用命令" class="headerlink" title="SSH客户端常用命令"></a>SSH客户端常用命令</h2><h3 id="登录"><a href="#登录" class="headerlink" title="登录"></a>登录</h3><p>可以使用如下两种方式登录。<br>a. 用户名@主机地址<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh learnit@192.168.80.23</span><br></pre></td></tr></table></figure></p>
+<p>b. 使用<code>-l</code>参数<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh 192.168.80.23 -l learnit</span><br></pre></td></tr></table></figure></p>
+<h3 id="执行一次性命令"><a href="#执行一次性命令" class="headerlink" title="执行一次性命令"></a>执行一次性命令</h3><p>如果只想在服务器上，快速执行一条命令并返回结果，不需要登录、输入命令、退出等多个操作，只需要在登录时后添加命令即可。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ ssh learnit@192.168.80.23 <span class="string">'ls -l'</span></span><br><span class="line">total 32</span><br><span class="line">drwxr-xr-x 2 learnit learnit 4096 Feb 15  2016 Desktop</span><br><span class="line">drwx------ 2 learnit learnit 4096 Jan 29 11:19 Downloads</span><br><span class="line">drwxr-xr-x 3 learnit learnit 4096 Jan 25 11:46 git</span><br><span class="line">drwxr-xr-x 4 learnit learnit 4096 Jan 29 11:21 <span class="built_in">local</span></span><br><span class="line">drwxr-xr-x 2 learnit learnit 4096 Jan 13  2016 python</span><br><span class="line">drwxr-xr-x 5 learnit learnit 4096 Jan 27 10:03 temp</span><br></pre></td></tr></table></figure></p>
+<h3 id="客户端生成密钥"><a href="#客户端生成密钥" class="headerlink" title="客户端生成密钥"></a>客户端生成密钥</h3><p>使用<code>ssh-keygen</code>命令生成本地密钥，默认存放在<code>~/.ssh/</code>目录下。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-keygen</span><br><span class="line">Generating public/private rsa key pair.</span><br><span class="line">Enter file <span class="keyword">in</span> <span class="built_in">which</span> to save the key (/home/Jeremy/.ssh/id_rsa):</span><br><span class="line">Enter passphrase (empty <span class="keyword">for</span> no passphrase):</span><br><span class="line">Enter same passphrase again:</span><br><span class="line">Your identification has been saved <span class="keyword">in</span> /home/Jeremy/.ssh/id_rsa.</span><br><span class="line">Your public key has been saved <span class="keyword">in</span> /home/Jeremy/.ssh/id_rsa.pub.</span><br><span class="line">The key fingerprint is:</span><br><span class="line">SHA256:VrUMOvTHxh53W+Dm2ioPRb9Qa94nv47epD1lV2IjLLk Jeremy@Jeremy-Dell</span><br><span class="line">The key<span class="string">'s randomart image is:</span></span><br><span class="line"><span class="string">+---[RSA 2048]----+</span></span><br><span class="line"><span class="string">|        . . . .  |</span></span><br><span class="line"><span class="string">|       . o * o . |</span></span><br><span class="line"><span class="string">|        o ooX = o|</span></span><br><span class="line"><span class="string">|         oo=oB+o+|</span></span><br><span class="line"><span class="string">|        S  o+o=+.|</span></span><br><span class="line"><span class="string">|       .  E. * o+|</span></span><br><span class="line"><span class="string">|          . . =o=|</span></span><br><span class="line"><span class="string">|          .. .*+.|</span></span><br><span class="line"><span class="string">|           o++.=+|</span></span><br><span class="line"><span class="string">+----[SHA256]-----+</span></span><br></pre></td></tr></table></figure></p>
+<p>常用参数：<br><code>-t</code>：密钥类型，dsa，ecdsa，ed25519，rsa，rsa1，默认rsa。<br><code>-C</code>：对密钥的注释。<br><code>-f</code>：密钥存放位置，推荐使用绝对路径。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-keygen -t rsa -C <span class="string">'second ssh key'</span> -f ~/.ssh/id_rsa_second</span><br></pre></td></tr></table></figure></p>
+<p>此命令表示生产一个叫<code>second ssh key</code>的rsa密钥，存放位置是<code>~/.ssh/id_rsa_second</code>。</p>
+<h3 id="发送密钥到服务端"><a href="#发送密钥到服务端" class="headerlink" title="发送密钥到服务端"></a>发送密钥到服务端</h3><p>有两种方式发送密钥。发送成功后，即可免密码登录。<br>a. 使用<code>ssh-copy-id</code>命令<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-copy-id learnit@192.168.80.23</span><br><span class="line">/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: <span class="string">"/home/Jeremy/.ssh/id_rsa_second.pub"</span></span><br><span class="line">/usr/bin/ssh-copy-id: INFO: attempting to <span class="built_in">log</span> <span class="keyword">in</span> with the new key(s), to filter out any that are already installed</span><br><span class="line">/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- <span class="keyword">if</span> you are prompted now it is to install the new keys</span><br><span class="line">learnit@192.168.80.23<span class="string">'s password:</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Number of key(s) added: 1</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">Now try logging into the machine, with:   "ssh '</span>learnit@192.168.80.23<span class="string">'"</span></span><br><span class="line"><span class="string">and check to make sure that only the key(s) you wanted were added.</span></span><br></pre></td></tr></table></figure></p>
+<p>常用参数：<br><code>-i</code>：指定密钥的绝对路径。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh-copy-id -i ~/.ssh/id_rsa_second learnit@192.168.80.23</span><br></pre></td></tr></table></figure></p>
+<p>b. 使用一次性命令<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ssh learnit@192.168.80.23 <span class="string">'mkdir -p .ssh &amp;&amp; cat &gt;&gt; .ssh/authorized_keys'</span> &lt; ~/.ssh/id_rsa.pub</span><br><span class="line">learnit@192.168.80.23<span class="string">'s password:</span></span><br></pre></td></tr></table></figure></p>
+<p>密钥发送成功后，即可免密码登录。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ ssh learnit@192.168.80.23</span><br><span class="line">Last login: Mon Feb  6 16:06:07 2017 from 192.168.80.2</span><br><span class="line">➜  /home/learnit &gt;</span><br></pre></td></tr></table></figure></p>
+<h3 id="客户端配置"><a href="#客户端配置" class="headerlink" title="客户端配置"></a>客户端配置</h3><p>每次输入用户名@主机地址，如果觉得比较麻烦，可以通过修改<code>~/.ssh/config</code>文件，简化输入。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ cat ~/.ssh/config</span><br><span class="line">Host arch</span><br><span class="line">HostName 192.168.80.23</span><br><span class="line">User learnit</span><br><span class="line">IdentityFile /home/Jeremy/.ssh/id_rsa</span><br></pre></td></tr></table></figure></p>
+<p>登录命令可以改为：<code>ssh arch</code>。<br>使用其他用户登录可以使用命令：<code>ssh root@arch</code>。<br>客户端<code>config</code>参数详情，请参考<code>man 5 ssh_config</code>。</p>
+<h3 id="Github多用户使用"><a href="#Github多用户使用" class="headerlink" title="Github多用户使用"></a>Github多用户使用</h3><p>如果有多个Github帐户，两个帐户无法使用同一个密钥。解决方法如下。<br>a. 查看哪个帐户使用了key<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ ssh -T -ai ~/.ssh/id_rsa git@github.com</span><br><span class="line">Hi higoge! You<span class="string">'ve successfully authenticated, but GitHub does not provide shell access.</span></span><br></pre></td></tr></table></figure></p>
+<p>b. 生成新的密钥。<br>c. 配置config文件<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">$ cat ~/.ssh/config</span><br><span class="line"><span class="comment"># Default github user(higoge@gmail.com)</span></span><br><span class="line">Host github.com <span class="comment">#任意填写</span></span><br><span class="line">HostName github.com</span><br><span class="line">User git</span><br><span class="line">IdentityFile /home/learnit/.ssh/id_rsa</span><br><span class="line"></span><br><span class="line"><span class="comment"># second user</span></span><br><span class="line">Host github-learnit</span><br><span class="line">HostName github.com</span><br><span class="line">User git</span><br><span class="line">IdentityFile /home/learnit/.ssh/id_rsa_second</span><br></pre></td></tr></table></figure></p>
+<p>d. clone仓库<br>默认用户clone方式不变，第二个用户主机地址使用<code>github-learnit</code>。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git <span class="built_in">clone</span> git@github-learnit:higoge/file.git</span><br></pre></td></tr></table></figure></p>
+<h3 id="SSH隧道"><a href="#SSH隧道" class="headerlink" title="SSH隧道"></a>SSH隧道</h3><p>SSH隧道常用参数如下。<br><code>-N</code>：不运行远程命令，仅转发端口。<br><code>-f</code>：后台运行<code>ssh</code>命令。<br><code>-C</code>: 对传输的数据进行压缩。<br><code>-D</code>：连接远程服务器，监听本地端口作为本地Socks5服务，所有连接都将通过本隧道发送给远端服务器。<br><code>-L</code>：监听本地端口，对这个端口的数据操作会通过隧道发给远程服务器的对应端口。<br><code>-R</code>：监听远程端口，对这个端口的数据操作会通过隧道发给本地服务的对应端口。</p>
+<p>a. Socks5服务<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ssh learnit@192.168.80.23 -D 1080 -o ServerAliveInterval=60 -C -f -N</span></span><br></pre></td></tr></table></figure></p>
+<p><code>-o ServerAliveInterval=60</code>：设置保活时间间隔，时间为60秒。<br>此命令可以启动本地1080端口，作为Socks5的服务端口。</p>
+<p>b. 远程服务穿透到本地某端口。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh -L 5902:127.0.0.1:5902 -N -f learnit@192.168.80.6</span><br></pre></td></tr></table></figure></p>
+<p>此命令的作用是加密远程桌面的连接，将远程桌面服务的5902端口穿透到本地的5902端口。</p>
+<p>c. 本地服务穿透到外网端口<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh -f -N -R remote_ip:80:localhost:4000 root@remote_ip</span><br></pre></td></tr></table></figure></p>
+<p>此命令将本地博客框架hexo的web端口4000，映射到远端服务器的80端口，通过浏览器访问<code>http://remote_ip</code>即能够访问本地的4000端口。</p>
+<h2 id="SSH服务端配置"><a href="#SSH服务端配置" class="headerlink" title="SSH服务端配置"></a>SSH服务端配置</h2><p>SSH服务端配置文件地址为<code>/etc/ssh/sshd_config</code>。每次修改完，请重启<code>sshd</code>服务。服务端<code>config</code>参数详情，请参考<code>man 5 sshd_config</code>。</p>
+<h3 id="限制模式"><a href="#限制模式" class="headerlink" title="限制模式"></a>限制模式</h3><p><code>StrictModes</code>参数表示<code>~/.ssh</code>文件夹的限制模式，如果设置为<code>yes</code>，那么<code>~/.ssh</code>文件夹权限为<code>700</code>，<code>~/.ssh/authorized_keys</code>文件权限必须是<code>600</code>。<br>如若密钥配置成功，但登录是还需要密码，请修改SSH文件和文件夹权限，或者将<code>StrictModes</code>设置为<code>no</code>。</p>
+<h3 id="登录较慢"><a href="#登录较慢" class="headerlink" title="登录较慢"></a>登录较慢</h3><p>SSH如果出现登录卡顿的情况，可以使用如下命令进行调试。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ssh -vvv learnit@192.168.80.23</span><br></pre></td></tr></table></figure></p>
+<p>一般会卡在<code>debug1: Authentications that can continue: publickey,gssapi-keyex,gssapi-with-mic,password</code>这句话。<br>修改如下参数即可解决。<br><code>UseDNS</code>改为<code>no</code>。<br><code>GSSAPIAuthentication</code>改为<code>no</code>。</p>
+<h3 id="限制root用户登录"><a href="#限制root用户登录" class="headerlink" title="限制root用户登录"></a>限制root用户登录</h3><p><code>PermitRootLogin</code>参数可以限制root用户的登录。<br>常用参数如下：<br><code>yes</code>：root用户可以登录。<br><code>prohibit-password</code>：root用户不能通过输入密码登录。<br><code>without-password</code>：root用户不能通过输入密码登录。<br><code>forced-commands-only</code>：root用户仅可以执行特定命令。<br><code>no</code>：root用户不能登录。</p>
+<p>如果设置了<code>forced-commands-only</code>模式，特定命令表示设置在<code>/root/.ssh/authorized_keys</code>中的添加的命令。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># cat ~/.ssh/authorized_keys</span></span><br><span class="line"><span class="built_in">command</span>=<span class="string">"ls -l"</span> ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQC+H6MNVJCpKx24FPvkX7gVE+bmjSjferbGxRZ/R3iPk9QBCZp2OrUcjhyWrjEjpV9DY1wXlDTUrg3+2HFqnhz+lEvhM0vl2Hlu3AgJsTEbWddDSZGayUTxCBg2mKe4Lks6MvVOubw3b+FmCSHtGc2mPfBtKNkr0GFWGZFXgEJKiZ9jFzx39nLaw0ZgR0WXkoRe2Nby+xyYsO2gs1u7j75CqFdKHs5zoLAV8C0d1x5tdFknuSGdMdYrbgpquSfrlQMJUIwJTzUnGLyE0a01IPs6OQ+c8LuuxDnEO8SCRDiJIh8Wyct1VWR3j3td/yq40NEyjPXqtd7bHVr8aBDjUb3t win10-cygwin</span><br></pre></td></tr></table></figure></p>
+<p>使用root用户登录后反馈如下。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ ssh root@192.168.80.23</span><br><span class="line">total 72</span><br><span class="line">-rw-------. 1 root root  1384 Nov 29 04:31 anaconda-ks.cfg</span><br><span class="line">-rw-r--r--. 1 root root 49565 Nov 29 04:31 install.log</span><br><span class="line">-rw-r--r--. 1 root root 10033 Nov 29 04:28 install.log.syslog</span><br><span class="line">Connection to 192.168.80.6 closed.</span><br></pre></td></tr></table></figure></p>
+<p>root用户登录成功后，直接执行<code>authorized_keys</code>中的command命令，反馈结果后，断开连接。</p>
+<p>如果本文对你有所帮助，请<a href="http://higoge.github.io/about/">小额赞助</a>。<br>~~ EOF ~~</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+            <a href="/tags/PuTTy/" rel="tag"># PuTTy</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/02/04/ad-linux07/" rel="next" title="Linux进阶07：Linux远程桌面配置">
+                <i class="fa fa-chevron-left"></i> Linux进阶07：Linux远程桌面配置
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/02/14/net04/" rel="prev" title="网络04：双路由器无线桥接设置及副路由器设置原则">
+                网络04：双路由器无线桥接设置及副路由器设置原则 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/author.jpg"
+                alt="挨踢汪汪 (Jeremy Wong)" />
+            
+              <p class="site-author-name" itemprop="name">挨踢汪汪 (Jeremy Wong)</p>
+              <p class="site-description motion-element" itemprop="description">I hurry and do not delay to keep your commandments.(PSM119:60)</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">103</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/higoge" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://weibo.com/higoge" target="_blank" title="Weibo">
+                    
+                      <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-globe"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://pan.baidu.com/s/1o8ubedW" title="汪汪的网盘(提取密码xo9s 解压密码higoge)" target="_blank">汪汪的网盘(提取密码xo9s 解压密码higoge)</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://coolshell.cn/" title="酷壳" target="_blank">酷壳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.ruanyifeng.com/blog/" title="阮一峰的网络日志" target="_blank">阮一峰的网络日志</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://unbug.github.io/codelf/" title="CODELF" target="_blank">CODELF</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.liaoxuefeng.com/" title="廖雪峰的官方网站" target="_blank">廖雪峰的官方网站</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#SSH的安全验证"><span class="nav-number">1.</span> <span class="nav-text"><a href="#SSH&#x7684;&#x5B89;&#x5168;&#x9A8C;&#x8BC1;" class="headerlink" title="SSH&#x7684;&#x5B89;&#x5168;&#x9A8C;&#x8BC1;"></a>SSH&#x7684;&#x5B89;&#x5168;&#x9A8C;&#x8BC1;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SSH服务端公有密钥查询和比对"><span class="nav-number">2.</span> <span class="nav-text"><a href="#SSH&#x670D;&#x52A1;&#x7AEF;&#x516C;&#x6709;&#x5BC6;&#x94A5;&#x67E5;&#x8BE2;&#x548C;&#x6BD4;&#x5BF9;" class="headerlink" title="SSH&#x670D;&#x52A1;&#x7AEF;&#x516C;&#x6709;&#x5BC6;&#x94A5;&#x67E5;&#x8BE2;&#x548C;&#x6BD4;&#x5BF9;"></a>SSH&#x670D;&#x52A1;&#x7AEF;&#x516C;&#x6709;&#x5BC6;&#x94A5;&#x67E5;&#x8BE2;&#x548C;&#x6BD4;&#x5BF9;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SSH客户端常用命令"><span class="nav-number">3.</span> <span class="nav-text"><a href="#SSH&#x5BA2;&#x6237;&#x7AEF;&#x5E38;&#x7528;&#x547D;&#x4EE4;" class="headerlink" title="SSH&#x5BA2;&#x6237;&#x7AEF;&#x5E38;&#x7528;&#x547D;&#x4EE4;"></a>SSH&#x5BA2;&#x6237;&#x7AEF;&#x5E38;&#x7528;&#x547D;&#x4EE4;</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#登录"><span class="nav-number">3.1.</span> <span class="nav-text"><a href="#&#x767B;&#x5F55;" class="headerlink" title="&#x767B;&#x5F55;"></a>&#x767B;&#x5F55;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#执行一次性命令"><span class="nav-number">3.2.</span> <span class="nav-text"><a href="#&#x6267;&#x884C;&#x4E00;&#x6B21;&#x6027;&#x547D;&#x4EE4;" class="headerlink" title="&#x6267;&#x884C;&#x4E00;&#x6B21;&#x6027;&#x547D;&#x4EE4;"></a>&#x6267;&#x884C;&#x4E00;&#x6B21;&#x6027;&#x547D;&#x4EE4;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#客户端生成密钥"><span class="nav-number">3.3.</span> <span class="nav-text"><a href="#&#x5BA2;&#x6237;&#x7AEF;&#x751F;&#x6210;&#x5BC6;&#x94A5;" class="headerlink" title="&#x5BA2;&#x6237;&#x7AEF;&#x751F;&#x6210;&#x5BC6;&#x94A5;"></a>&#x5BA2;&#x6237;&#x7AEF;&#x751F;&#x6210;&#x5BC6;&#x94A5;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#发送密钥到服务端"><span class="nav-number">3.4.</span> <span class="nav-text"><a href="#&#x53D1;&#x9001;&#x5BC6;&#x94A5;&#x5230;&#x670D;&#x52A1;&#x7AEF;" class="headerlink" title="&#x53D1;&#x9001;&#x5BC6;&#x94A5;&#x5230;&#x670D;&#x52A1;&#x7AEF;"></a>&#x53D1;&#x9001;&#x5BC6;&#x94A5;&#x5230;&#x670D;&#x52A1;&#x7AEF;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#客户端配置"><span class="nav-number">3.5.</span> <span class="nav-text"><a href="#&#x5BA2;&#x6237;&#x7AEF;&#x914D;&#x7F6E;" class="headerlink" title="&#x5BA2;&#x6237;&#x7AEF;&#x914D;&#x7F6E;"></a>&#x5BA2;&#x6237;&#x7AEF;&#x914D;&#x7F6E;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Github多用户使用"><span class="nav-number">3.6.</span> <span class="nav-text"><a href="#Github&#x591A;&#x7528;&#x6237;&#x4F7F;&#x7528;" class="headerlink" title="Github&#x591A;&#x7528;&#x6237;&#x4F7F;&#x7528;"></a>Github&#x591A;&#x7528;&#x6237;&#x4F7F;&#x7528;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SSH隧道"><span class="nav-number">3.7.</span> <span class="nav-text"><a href="#SSH&#x96A7;&#x9053;" class="headerlink" title="SSH&#x96A7;&#x9053;"></a>SSH&#x96A7;&#x9053;</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#SSH服务端配置"><span class="nav-number">4.</span> <span class="nav-text"><a href="#SSH&#x670D;&#x52A1;&#x7AEF;&#x914D;&#x7F6E;" class="headerlink" title="SSH&#x670D;&#x52A1;&#x7AEF;&#x914D;&#x7F6E;"></a>SSH&#x670D;&#x52A1;&#x7AEF;&#x914D;&#x7F6E;</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#限制模式"><span class="nav-number">4.1.</span> <span class="nav-text"><a href="#&#x9650;&#x5236;&#x6A21;&#x5F0F;" class="headerlink" title="&#x9650;&#x5236;&#x6A21;&#x5F0F;"></a>&#x9650;&#x5236;&#x6A21;&#x5F0F;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#登录较慢"><span class="nav-number">4.2.</span> <span class="nav-text"><a href="#&#x767B;&#x5F55;&#x8F83;&#x6162;" class="headerlink" title="&#x767B;&#x5F55;&#x8F83;&#x6162;"></a>&#x767B;&#x5F55;&#x8F83;&#x6162;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#限制root用户登录"><span class="nav-number">4.3.</span> <span class="nav-text"><a href="#&#x9650;&#x5236;root&#x7528;&#x6237;&#x767B;&#x5F55;" class="headerlink" title="&#x9650;&#x5236;root&#x7528;&#x6237;&#x767B;&#x5F55;"></a>&#x9650;&#x5236;root&#x7528;&#x6237;&#x767B;&#x5F55;</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">挨踢汪汪 (Jeremy Wong)</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1268103735&web_id=1268103735" language="JavaScript"></script>
+  </div>
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

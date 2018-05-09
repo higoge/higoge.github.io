@@ -1,0 +1,1166 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/fv1.ico?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/fv1.ico?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/fv1.ico?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/fv1.ico?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Cygwin," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Learnit" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="Cygwin是Windows上的仿真Linux环境，可以对很多基于Linux开发的源码进行编译，比如以前接触的vlc和FFmpeg等音视频项目。还有一个类似的环境是MinGW+Msys，但是在Windows7 x86_64位上MinGW的界面Msys(rxvt)无法使用，丑陋的DOS窗口及极慢的反应速度让人无法接受。Cygwin虽然也慢，但提供了基于自身环境的GCC，还提供了MinGW的GCC，并">
+<meta name="keywords" content="Cygwin">
+<meta property="og:type" content="article">
+<meta property="og:title" content="工具01：Cygwin的安装配置">
+<meta property="og:url" content="http://higoge.github.io/2015/07/15/tools01/index.html">
+<meta property="og:site_name" content="Learnit">
+<meta property="og:description" content="Cygwin是Windows上的仿真Linux环境，可以对很多基于Linux开发的源码进行编译，比如以前接触的vlc和FFmpeg等音视频项目。还有一个类似的环境是MinGW+Msys，但是在Windows7 x86_64位上MinGW的界面Msys(rxvt)无法使用，丑陋的DOS窗口及极慢的反应速度让人无法接受。Cygwin虽然也慢，但提供了基于自身环境的GCC，还提供了MinGW的GCC，并">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://raw.githubusercontent.com/higoge/image/master/cw/01.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/higoge/image/master/cw/02.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/higoge/image/master/cw/03.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/higoge/image/master/cw/04.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/higoge/image/master/cw/05.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/higoge/image/master/cw/06.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/higoge/image/master/cw/07.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/higoge/image/master/cw/08.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/higoge/image/master/cw/09.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/higoge/image/master/cw/10.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/higoge/image/master/cw/11.png">
+<meta property="og:image" content="https://raw.githubusercontent.com/higoge/image/master/cw/12.png">
+<meta property="og:updated_time" content="2017-12-11T08:07:47.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="工具01：Cygwin的安装配置">
+<meta name="twitter:description" content="Cygwin是Windows上的仿真Linux环境，可以对很多基于Linux开发的源码进行编译，比如以前接触的vlc和FFmpeg等音视频项目。还有一个类似的环境是MinGW+Msys，但是在Windows7 x86_64位上MinGW的界面Msys(rxvt)无法使用，丑陋的DOS窗口及极慢的反应速度让人无法接受。Cygwin虽然也慢，但提供了基于自身环境的GCC，还提供了MinGW的GCC，并">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/higoge/image/master/cw/01.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.3',
+    sidebar: {"display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://higoge.github.io/2015/07/15/tools01/"/>
+
+
+
+
+
+  <title>工具01：Cygwin的安装配置 | Learnit</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+
+  <div class="container  page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Learnit</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">挨踢汪汪的杂货店</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://higoge.github.io/2015/07/15/tools01/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="挨踢汪汪 (Jeremy Wong)">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/author.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Learnit">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">工具01：Cygwin的安装配置</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-07-15T20:14:08+08:00">
+                2015-07-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/系统工具/" itemprop="url" rel="index">
+                    <span itemprop="name">系统工具</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>Cygwin是Windows上的仿真Linux环境，可以对很多基于Linux开发的源码进行编译，比如以前接触的vlc和FFmpeg等音视频项目。<br>还有一个类似的环境是MinGW+Msys，但是在Windows7 x86_64位上MinGW的界面Msys(rxvt)无法使用，丑陋的DOS窗口及极慢的反应速度让人无法接受。<br>Cygwin虽然也慢，但提供了基于自身环境的GCC，还提供了MinGW的GCC，并且也集成了相关软件，诸如SSH，GIT等，界面及颜色较为漂亮，字体可修改，还有中文的输出，比较完美。<br>当然，Cygwin也有自己的缺点，那就是无法使用类似mingw-get进行软件的在线升级。需重新运行安装文件进行了升级，虽然麻烦点，但不太经常升级软件所以可以凑合使用。<br><a id="more"></a></p>
+<h2 id="Cygwin的下载"><a href="#Cygwin的下载" class="headerlink" title="Cygwin的下载"></a>Cygwin的下载</h2><p>在Cygwin的<a href="https://cygwin.com/install.html" target="_blank" rel="noopener">下载页面</a>，选择x86版本还是x86_64版本进行下载。<s><strong>建议选择32位版本</strong></s>。<br>也可到汪汪的网盘(地址请看首页侧边栏<code>Links</code>下方)下载离线安装zip包(cygwin.2015.07.09.7z)。<br><strong>注意</strong>：后面章节某些图片由于是之前切的，有些路径并不能完全对应。</p>
+<h2 id="Cygwin的离线安装"><a href="#Cygwin的离线安装" class="headerlink" title="Cygwin的离线安装"></a>Cygwin的离线安装</h2><p>双击“setup-x86.exe”。<br><img src="https://raw.githubusercontent.com/higoge/image/master/cw/01.png" class="img-center"><br>点击“下一步”。<br><img src="https://raw.githubusercontent.com/higoge/image/master/cw/02.png" class="img-center"><br>选择“Install from Local Directory”，进行离线安装。点击“下一步”。<br>在线安装请选择“Install from Internet”，并添加国内163的源<code>http://mirrors.163.com/cygwin/</code>。<br><img src="https://raw.githubusercontent.com/higoge/image/master/cw/03.png" class="img-center"><br>选择安装路径，建议安装到除系统盘的根目录下。点击“下一步”。<br><img src="https://raw.githubusercontent.com/higoge/image/master/cw/04.png" class="img-center"><br>选择离线包的路径 ，点击“下一步”。<br><img src="https://raw.githubusercontent.com/higoge/image/master/cw/05.png" class="img-center"><br>选择要安装的包，将状态从“Skip”点击到相对应的版本，<strong>具体哪些需要安装，见下一章</strong>。点击“下一步”。<br><img src="https://raw.githubusercontent.com/higoge/image/master/cw/06.png" class="img-center"><br>正在安装……<br><img src="https://raw.githubusercontent.com/higoge/image/master/cw/07.png" class="img-center"><br>选择要创建的图标，点击“完成”。<br><img src="https://raw.githubusercontent.com/higoge/image/master/cw/08.png" class="img-center"><br>双击桌面的“Cygwin Terminal”图标，第一次启动，会创建<code>$HOME</code>目录，及相关的文件。至此，安装完成。<br><img src="https://raw.githubusercontent.com/higoge/image/master/cw/09.png" class="img-center"></p>
+<h2 id="选择安装包"><a href="#选择安装包" class="headerlink" title="选择安装包"></a>选择安装包</h2><p>推荐的安装包如下。如果需要其他安装包，再次运行安装文件，选择在线安装，并重新选择安装的包即可。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line">Archive</span><br><span class="line">    unzip</span><br><span class="line">    xz</span><br><span class="line">    zip</span><br><span class="line">Devel</span><br><span class="line">    autoconf</span><br><span class="line">    automake</span><br><span class="line">    binutils</span><br><span class="line">    cmake</span><br><span class="line">    cvs</span><br><span class="line">    cygwin64-libiconv</span><br><span class="line">    gcc-core</span><br><span class="line">    gcc-g++ (3.4.4-3)</span><br><span class="line">    gdb</span><br><span class="line">    gettext-devel</span><br><span class="line">    git</span><br><span class="line">    git-completion</span><br><span class="line">    libtool</span><br><span class="line">    make</span><br><span class="line">    mingw-binutils</span><br><span class="line">    mingw-gcc-core</span><br><span class="line">    mingw-gcc-g++</span><br><span class="line">    mingw-pthreads</span><br><span class="line">    mingw-runtime</span><br><span class="line">    mingw-w32api</span><br><span class="line">    mingw64-i686-binutils</span><br><span class="line">    mingw64-i686-gcc-core</span><br><span class="line">    mingw64-i686-g++</span><br><span class="line">    mingw64-i686-pkgconfig</span><br><span class="line">    mingw64-i686-runtime</span><br><span class="line">    mingw64-x86_64-binutils</span><br><span class="line">    mingw64-x86_64-gcc-core</span><br><span class="line">    mingw64-x86_64-g++</span><br><span class="line">    mingw64-x86_64-pkg-config</span><br><span class="line">    mingw64-x86_64-runtime</span><br><span class="line">    nasm</span><br><span class="line">    patch</span><br><span class="line">    patchutils</span><br><span class="line">    pkg-config</span><br><span class="line">    subversion</span><br><span class="line">Editor</span><br><span class="line">    vim</span><br><span class="line">Libs</span><br><span class="line">    crypt</span><br><span class="line">    expat</span><br><span class="line">    libgcrypt-devel</span><br><span class="line">    libgcrypt20</span><br><span class="line">Net</span><br><span class="line">    curl</span><br><span class="line">    openssh</span><br><span class="line">Text</span><br><span class="line">    gettext</span><br><span class="line">Utils</span><br><span class="line">    cygutils-extra</span><br><span class="line">    dos2unix</span><br><span class="line">Web</span><br><span class="line">    wget</span><br></pre></td></tr></table></figure></p>
+<p>2017.01.19更新：最新的Cygwin中，<code>git-completion</code>合并到<code>Shells/bash-completion</code>。</p>
+<h2 id="配置Cygwin"><a href="#配置Cygwin" class="headerlink" title="配置Cygwin"></a>配置Cygwin</h2><p>开启Cygwin后，在标题栏点击右键-&gt;“Option”。<br><img src="https://raw.githubusercontent.com/higoge/image/master/cw/10.png" class="img-center"><br>设置字体。几种常用的等宽字体(Fonts.7z)，请到汪汪的网盘(地址请看首页侧边栏<code>Links</code>下方)下载。<br><img src="https://raw.githubusercontent.com/higoge/image/master/cw/11.png" class="img-center"><br>设置显示行数。<br><img src="https://raw.githubusercontent.com/higoge/image/master/cw/12.png" class="img-center"></p>
+<h2 id="访问系统文件"><a href="#访问系统文件" class="headerlink" title="访问系统文件"></a>访问系统文件</h2><p>Cygwin可访问系统中的所有文件，默认的根目录/为Cygwin的安装目录，要访问其他盘符，对应的路径为<code>/cygdriver/盘符</code>。</p>
+<h2 id="Cygwin的删除"><a href="#Cygwin的删除" class="headerlink" title="Cygwin的删除"></a>Cygwin的删除</h2><p><strong>建议</strong>先备份<code>$HOME</code>目录。</p>
+<ul>
+<li>删除安装文件夹。</li>
+<li>删除注册表<code>[HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Cygwin]</code>。</li>
+</ul>
+<h2 id="Cygwin的复制粘贴"><a href="#Cygwin的复制粘贴" class="headerlink" title="Cygwin的复制粘贴"></a>Cygwin的复制粘贴</h2><ul>
+<li>鼠标选中即为复制。</li>
+<li>右键-&gt;“Paste”为粘贴，快捷键为<code>Shift+Insert</code>。</li>
+</ul>
+<h2 id="Cygwin的命令行升级"><a href="#Cygwin的命令行升级" class="headerlink" title="Cygwin的命令行升级"></a>Cygwin的命令行升级</h2><p>(2015.07.20更新本章。2016.05.14再次更新。)<br>Cygwin官方推荐使用<code>setup.exe</code>进行程序升级，不推荐其他方式，诸如<code>apt-cyg</code>。<code>setup.exe</code>支持命令行参数。可以用参数开启静默安装。升级过程参数如下。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ curl -O https://cygwin.com/setup-x86.exe</span><br><span class="line">$ chmod a+x setup-x86</span><br><span class="line">$ ./setup-x86 --no-desktop --no-shortcuts --no-startmenu --quiet-mode --upgrade-also --site http://mirrors.163.com/cygwin/</span><br></pre></td></tr></table></figure></p>
+<p>升级完成后，<strong>建议重启Cygwin</strong>，因为<code>cygwin1.dll</code>升级后不会自动加载，其他程序无法读取正常访问。</p>
+<p><code>setup.exe</code>的帮助文档解释了上述参数的作用。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">$ ./setup-x86.exe -h</span><br><span class="line"></span><br><span class="line">Command Line Options:</span><br><span class="line"></span><br><span class="line"> -D --download                     Download from internet</span><br><span class="line"> -L --<span class="built_in">local</span>-install                Install from <span class="built_in">local</span> directory</span><br><span class="line"> -s --site                         Download site</span><br><span class="line"> -O --only-site                    Ignore all sites except <span class="keyword">for</span> -s</span><br><span class="line"> -R --root                         Root installation directory</span><br><span class="line"> -x --remove-packages              Specify packages to uninstall</span><br><span class="line"> -c --remove-categories            Specify categories to uninstall</span><br><span class="line"> -P --packages                     Specify packages to install</span><br><span class="line"> -C --categories                   Specify entire categories to install</span><br><span class="line"> -p --proxy                        HTTP/FTP proxy (host:port)</span><br><span class="line"> -a --arch                         architecture to install (x86_64 or x86)</span><br><span class="line"> -q --quiet-mode                   Unattended setup mode</span><br><span class="line"> -M --package-manager              Semi-attended chooser-only mode</span><br><span class="line"> -B --no-admin                     Do not check <span class="keyword">for</span> and enforce running as</span><br><span class="line">                                   Administrator</span><br><span class="line"> -W --<span class="built_in">wait</span>                         When elevating, <span class="built_in">wait</span> <span class="keyword">for</span> elevated child</span><br><span class="line">                                   process</span><br><span class="line"> -h --<span class="built_in">help</span>                         <span class="built_in">print</span> <span class="built_in">help</span></span><br><span class="line"> -v --verbose                      Verbose output</span><br><span class="line"> -l --<span class="built_in">local</span>-package-dir            Local package directory</span><br><span class="line"> -r --no-replaceonreboot           Disable replacing <span class="keyword">in</span>-use files on next</span><br><span class="line">                                   reboot.</span><br><span class="line"> -X --no-verify                    Don<span class="string">'t verify setup.ini signatures</span></span><br><span class="line"><span class="string"> -n --no-shortcuts                 Disable creation of desktop and start menu</span></span><br><span class="line"><span class="string">                                   shortcuts</span></span><br><span class="line"><span class="string"> -N --no-startmenu                 Disable creation of start menu shortcut</span></span><br><span class="line"><span class="string"> -d --no-desktop                   Disable creation of desktop shortcut</span></span><br><span class="line"><span class="string"> -K --pubkey                       URL of extra public key file (gpg format)</span></span><br><span class="line"><span class="string"> -S --sexpr-pubkey                 Extra public key in s-expr format</span></span><br><span class="line"><span class="string"> -u --untrusted-keys               Use untrusted keys from last-extrakeys</span></span><br><span class="line"><span class="string"> -U --keep-untrusted-keys          Use untrusted keys and retain all</span></span><br><span class="line"><span class="string"> -g --upgrade-also                 also upgrade installed packages</span></span><br><span class="line"><span class="string"> -o --delete-orphans               remove orphaned packages</span></span><br><span class="line"><span class="string"> -m --mirror-mode                  Skip availability check when installing from</span></span><br><span class="line"><span class="string">                                   local directory (requires local directory to</span></span><br><span class="line"><span class="string">                                   be clean mirror!)</span></span><br><span class="line"><span class="string"> -A --disable-buggy-antivirus      Disable known or suspected buggy anti virus</span></span><br><span class="line"><span class="string">                                   software packages during execution.</span></span><br></pre></td></tr></table></figure></p>
+<p>如果本文对你有所帮助，请<a href="http://higoge.github.io/about/">小额赞助</a>。<br>~~ EOF ~~</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Cygwin/" rel="tag"># Cygwin</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/07/14/breakwall06/" rel="next" title="狗急跳墙06：HostsTool【废弃】">
+                <i class="fa fa-chevron-left"></i> 狗急跳墙06：HostsTool【废弃】
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/07/16/sm01/" rel="prev" title="流媒体01：VLC-2.2.1编译">
+                流媒体01：VLC-2.2.1编译 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/author.jpg"
+                alt="挨踢汪汪 (Jeremy Wong)" />
+            
+              <p class="site-author-name" itemprop="name">挨踢汪汪 (Jeremy Wong)</p>
+              <p class="site-description motion-element" itemprop="description">I hurry and do not delay to keep your commandments.(PSM119:60)</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">103</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/higoge" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://weibo.com/higoge" target="_blank" title="Weibo">
+                    
+                      <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-globe"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://pan.baidu.com/s/1o8ubedW" title="汪汪的网盘(提取密码xo9s 解压密码higoge)" target="_blank">汪汪的网盘(提取密码xo9s 解压密码higoge)</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://coolshell.cn/" title="酷壳" target="_blank">酷壳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.ruanyifeng.com/blog/" title="阮一峰的网络日志" target="_blank">阮一峰的网络日志</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://unbug.github.io/codelf/" title="CODELF" target="_blank">CODELF</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.liaoxuefeng.com/" title="廖雪峰的官方网站" target="_blank">廖雪峰的官方网站</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Cygwin的下载"><span class="nav-number">1.</span> <span class="nav-text"><a href="#Cygwin&#x7684;&#x4E0B;&#x8F7D;" class="headerlink" title="Cygwin&#x7684;&#x4E0B;&#x8F7D;"></a>Cygwin&#x7684;&#x4E0B;&#x8F7D;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cygwin的离线安装"><span class="nav-number">2.</span> <span class="nav-text"><a href="#Cygwin&#x7684;&#x79BB;&#x7EBF;&#x5B89;&#x88C5;" class="headerlink" title="Cygwin&#x7684;&#x79BB;&#x7EBF;&#x5B89;&#x88C5;"></a>Cygwin&#x7684;&#x79BB;&#x7EBF;&#x5B89;&#x88C5;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#选择安装包"><span class="nav-number">3.</span> <span class="nav-text"><a href="#&#x9009;&#x62E9;&#x5B89;&#x88C5;&#x5305;" class="headerlink" title="&#x9009;&#x62E9;&#x5B89;&#x88C5;&#x5305;"></a>&#x9009;&#x62E9;&#x5B89;&#x88C5;&#x5305;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置Cygwin"><span class="nav-number">4.</span> <span class="nav-text"><a href="#&#x914D;&#x7F6E;Cygwin" class="headerlink" title="&#x914D;&#x7F6E;Cygwin"></a>&#x914D;&#x7F6E;Cygwin</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#访问系统文件"><span class="nav-number">5.</span> <span class="nav-text"><a href="#&#x8BBF;&#x95EE;&#x7CFB;&#x7EDF;&#x6587;&#x4EF6;" class="headerlink" title="&#x8BBF;&#x95EE;&#x7CFB;&#x7EDF;&#x6587;&#x4EF6;"></a>&#x8BBF;&#x95EE;&#x7CFB;&#x7EDF;&#x6587;&#x4EF6;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cygwin的删除"><span class="nav-number">6.</span> <span class="nav-text"><a href="#Cygwin&#x7684;&#x5220;&#x9664;" class="headerlink" title="Cygwin&#x7684;&#x5220;&#x9664;"></a>Cygwin&#x7684;&#x5220;&#x9664;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cygwin的复制粘贴"><span class="nav-number">7.</span> <span class="nav-text"><a href="#Cygwin&#x7684;&#x590D;&#x5236;&#x7C98;&#x8D34;" class="headerlink" title="Cygwin&#x7684;&#x590D;&#x5236;&#x7C98;&#x8D34;"></a>Cygwin&#x7684;&#x590D;&#x5236;&#x7C98;&#x8D34;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Cygwin的命令行升级"><span class="nav-number">8.</span> <span class="nav-text"><a href="#Cygwin&#x7684;&#x547D;&#x4EE4;&#x884C;&#x5347;&#x7EA7;" class="headerlink" title="Cygwin&#x7684;&#x547D;&#x4EE4;&#x884C;&#x5347;&#x7EA7;"></a>Cygwin&#x7684;&#x547D;&#x4EE4;&#x884C;&#x5347;&#x7EA7;</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">挨踢汪汪 (Jeremy Wong)</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1268103735&web_id=1268103735" language="JavaScript"></script>
+  </div>
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/fv1.ico?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/fv1.ico?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/fv1.ico?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/fv1.ico?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Openfiler," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Learnit" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="新注：这是2010年在51CTO写的一篇旧文，目前相关的软件都有更新，但核心的内容是一致的。 本篇博客主要介绍iSCSI客户端及SMB/CIFS客户端的安装配置使用。 环境 iSCSI客户端：open-iscsi-2.0-871。 SMB/CIFS客户端：Samba-3.4.0。 操作系统：CentOS5.3。新注：相关软件的最新下载链接没有验证，若不对，请自行搜索最新版本吧。命令前面的#表示当前">
+<meta name="keywords" content="Openfiler">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Openfiler03：open-iscsi安装配置及smbclient的安装">
+<meta property="og:url" content="http://higoge.github.io/2015/06/23/openfiler03/index.html">
+<meta property="og:site_name" content="Learnit">
+<meta property="og:description" content="新注：这是2010年在51CTO写的一篇旧文，目前相关的软件都有更新，但核心的内容是一致的。 本篇博客主要介绍iSCSI客户端及SMB/CIFS客户端的安装配置使用。 环境 iSCSI客户端：open-iscsi-2.0-871。 SMB/CIFS客户端：Samba-3.4.0。 操作系统：CentOS5.3。新注：相关软件的最新下载链接没有验证，若不对，请自行搜索最新版本吧。命令前面的#表示当前">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://raw.githubusercontent.com/higoge/image/master/openfiler03/01.jpg">
+<meta property="og:updated_time" content="2017-12-11T08:07:45.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Openfiler03：open-iscsi安装配置及smbclient的安装">
+<meta name="twitter:description" content="新注：这是2010年在51CTO写的一篇旧文，目前相关的软件都有更新，但核心的内容是一致的。 本篇博客主要介绍iSCSI客户端及SMB/CIFS客户端的安装配置使用。 环境 iSCSI客户端：open-iscsi-2.0-871。 SMB/CIFS客户端：Samba-3.4.0。 操作系统：CentOS5.3。新注：相关软件的最新下载链接没有验证，若不对，请自行搜索最新版本吧。命令前面的#表示当前">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/higoge/image/master/openfiler03/01.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.3',
+    sidebar: {"display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://higoge.github.io/2015/06/23/openfiler03/"/>
+
+
+
+
+
+  <title>Openfiler03：open-iscsi安装配置及smbclient的安装 | Learnit</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+
+  <div class="container  page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Learnit</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">挨踢汪汪的杂货店</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://higoge.github.io/2015/06/23/openfiler03/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="挨踢汪汪 (Jeremy Wong)">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/author.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Learnit">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Openfiler03：open-iscsi安装配置及smbclient的安装</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2015-06-23T21:46:42+08:00">
+                2015-06-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/存储/" itemprop="url" rel="index">
+                    <span itemprop="name">存储</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong>新注</strong>：这是2010年在51CTO写的一篇旧文，目前相关的软件都有更新，但核心的内容是一致的。</p>
+<p>本篇博客主要介绍iSCSI客户端及SMB/CIFS客户端的安装配置使用。</p>
+<h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><ul>
+<li>iSCSI客户端：<a href="http://www.open-iscsi.org/bits/open-iscsi-2.0-871.tar.gz" target="_blank" rel="noopener">open-iscsi-2.0-871</a>。</li>
+<li>SMB/CIFS客户端：<a href="http://samba.org/samba/ftp/stable/samba-3.4.0.tar.gz" target="_blank" rel="noopener">Samba-3.4.0</a>。</li>
+<li>操作系统：CentOS5.3。<br><strong>新注</strong>：相关软件的最新下载链接没有验证，若不对，请自行搜索最新版本吧。命令前面的<code>#</code>表示当前使用root用户。</li>
+</ul>
+<a id="more"></a>
+<h2 id="open-iscsi的安装"><a href="#open-iscsi的安装" class="headerlink" title="open-iscsi的安装"></a>open-iscsi的安装</h2><p>首先下载open-iscsi-2.0-871，然后执行：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># tar xzvf open-iscsi-2.0-871.tar.gz    </span></span><br><span class="line"><span class="comment"># cd open-iscsi-2.0-871 </span></span><br><span class="line"><span class="comment"># make </span></span><br><span class="line"><span class="comment"># make install</span></span><br></pre></td></tr></table></figure></p>
+<p>其中<code>make install</code>命令需要<strong>超级用户权限</strong>。</p>
+<h2 id="开启停止open-iscsi服务"><a href="#开启停止open-iscsi服务" class="headerlink" title="开启停止open-iscsi服务"></a>开启停止open-iscsi服务</h2><p>本章所有命令需要<strong>超级用户权限</strong>。<br>开启open-iscsi服务命令。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># service open-iscsi start</span></span><br></pre></td></tr></table></figure></p>
+<p>停止open-iscsi服务命令。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># service open-iscsi stop</span></span><br></pre></td></tr></table></figure></p>
+<p>可以通过以下命令查看open-iscsi的运行状态。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># service open-iscsi status </span></span><br><span class="line">iscsid (pid 5119 5118) is running...</span><br></pre></td></tr></table></figure></p>
+<p>开机默认启动open-iscsi<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># chkconfig open-iscsi on</span></span><br></pre></td></tr></table></figure></p>
+<p>关闭开机默认启动open-iscsi<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># chkconfig open-iscsi off</span></span><br></pre></td></tr></table></figure></p>
+<p>可以通过一下命令查看open-iscsi的是否开机运行<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># chkconfig --list open-iscsi </span></span><br><span class="line">open-iscsi            0:off     1:off     2:on        3:on        4:on        5:on        6:off</span><br></pre></td></tr></table></figure></p>
+<p>其中0~6是什么意思，请Google。</p>
+<h2 id="登录登出iSCSI"><a href="#登录登出iSCSI" class="headerlink" title="登录登出iSCSI"></a>登录登出iSCSI</h2><p>以上一篇博客为例，查找(discovery)某IP下的target。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># iscsiadm -m discovery -t st -p 172.16.5.226 </span></span><br><span class="line">172.16.5.226:3260,1 iqn.openfiler:jeremiah01</span><br></pre></td></tr></table></figure></p>
+<p>可以看到open-iscsi发现了Openfiler上配置的iSCSI target。<br>执行以下命令登录iSCSI target。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># iscsiadm -m node -T iqn.openfiler:jeremiah01 -l </span></span><br><span class="line">Logging <span class="keyword">in</span> to [iface: default, target: iqn.openfiler:jeremiah01, portal: 172.16.5.226,3260] </span><br><span class="line">Login to [iface: default, target: iqn.openfiler:jeremiah01, portal: 172.16.5.226,3260]: successful</span><br></pre></td></tr></table></figure></p>
+<p>登录成功后会发现/dev下多了一个设备：<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ls /dev/sd* </span></span><br><span class="line">/dev/sda    /dev/sda1    /dev/sda2    /dev/sdb</span><br></pre></td></tr></table></figure></p>
+<p>本例中是/dev/sdb。如果执行以下命令会发现很有意思的问题。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># ll /dev/disk/by-path/ </span></span><br><span class="line">total 0 </span><br><span class="line">lrwxrwxrwx 1 root root    9 Feb 24 19:50 ip-172.16.5.226:3260-iscsi-iqn.openfiler:jeremiah01-lun-0 -&gt; ../../sdb</span><br></pre></td></tr></table></figure></p>
+<p>可以看到<code>/dev/disk/by-path/ip-172.16.5.226:3260-iscsi-iqn.openfiler:jeremiah01-lun-0</code>是多出来新硬盘的快捷方式。<br>剩下的分区等在此不再赘述。请参考<code>fdisk</code>命令。</p>
+<p>登出target。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># iscsiadm -m node -T iqn.openfiler:jeremiah01 --logout </span></span><br><span class="line">Logging out of session [sid: 1, target: iqn.openfiler:jeremiah01, portal: 172.16.5.226,3260] </span><br><span class="line">Logout of [sid: 1, target: iqn.openfiler:jeremiah01, portal: 172.16.5.226,3260]: successful</span><br></pre></td></tr></table></figure></p>
+<h2 id="带用户名和密码的target登录"><a href="#带用户名和密码的target登录" class="headerlink" title="带用户名和密码的target登录"></a>带用户名和密码的target登录</h2><p>如果服务器端的target添加了权限，需要用户名密码才能登录，如图所示。<br><img src="https://raw.githubusercontent.com/higoge/image/master/openfiler03/01.jpg" class="img-center"><br>那么客户端不能正常的登录iSCSI target。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># iscsiadm -m node -T iqn.openfiler:jeremiah01 -l </span></span><br><span class="line">Logging <span class="keyword">in</span> to [iface: default, target: iqn.openfiler:jeremiah01, portal: 172.16.5.226,3260] </span><br><span class="line">iscsiadm: Could not login to [iface: default, target: iqn.openfiler:jeremiah01, portal: 172.16.5.226,3260]:    </span><br><span class="line">iscsiadm: initiator reported error (19 - encountered non-retryable iSCSI login failure)</span><br></pre></td></tr></table></figure></p>
+<p>需要修改<code>/etc/iscsi/node</code>的节点信息。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># vi /etc/iscsi/nodes/iqn.openfiler\:jeremiah01/172.16.5.226\,3260\,1/default</span></span><br></pre></td></tr></table></figure></p>
+<p>找到如下信息。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">node.session.auth.authmethod = None</span><br></pre></td></tr></table></figure></p>
+<p>修改为如下配置。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">node.session.auth.authmethod = CHAP </span><br><span class="line">node.session.auth.username = jeremiah </span><br><span class="line">node.session.auth.password = vlc</span><br></pre></td></tr></table></figure></p>
+<p>然后再次登录就可以成功。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># iscsiadm -m node -T iqn.openfiler:jeremiah01 -l </span></span><br><span class="line">Logging <span class="keyword">in</span> to [iface: default, target: iqn.openfiler:jeremiah01, portal: 172.16.5.226,3260] </span><br><span class="line">Login to [iface: default, target: iqn.openfiler:jeremiah01, portal: 172.16.5.226,3260]: successful</span><br></pre></td></tr></table></figure></p>
+<p><strong>注意，如果执行了discovery后，上述修改将会被还原。</strong></p>
+<h2 id="Samba-3-4-0的安装"><a href="#Samba-3-4-0的安装" class="headerlink" title="Samba-3.4.0的安装"></a>Samba-3.4.0的安装</h2><p>一般linux都默认Samba客户端。执行以下命令进行检查。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># smbclient --version</span></span><br></pre></td></tr></table></figure></p>
+<p>如果没有安装，下载Samba-3.4.0，执行以下命令。<br><figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># tar xzvf samba-3.4.0.tar.gz </span></span><br><span class="line"><span class="comment"># cd samba-3.4.0/source4 </span></span><br><span class="line"><span class="comment"># ./autogen.sh </span></span><br><span class="line"><span class="comment"># ./configure </span></span><br><span class="line"><span class="comment"># make</span></span><br><span class="line"><span class="comment"># cd bin</span></span><br><span class="line"><span class="comment"># smbclient --version</span></span><br></pre></td></tr></table></figure></p>
+<p>到此，就可以执行smbclient的相关命令了。</p>
+<p>如果本文对你有所帮助，请<a href="http://higoge.github.io/about/">小额赞助</a>。<br>~~ EOF ~~</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Openfiler/" rel="tag"># Openfiler</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2015/06/23/openfiler02/" rel="next" title="Openfiler02：Openfiler的配置">
+                <i class="fa fa-chevron-left"></i> Openfiler02：Openfiler的配置
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2015/06/23/essay02/" rel="prev" title="随笔02：关于海狗哥的流媒体空间资料一些说明">
+                随笔02：关于海狗哥的流媒体空间资料一些说明 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/author.jpg"
+                alt="挨踢汪汪 (Jeremy Wong)" />
+            
+              <p class="site-author-name" itemprop="name">挨踢汪汪 (Jeremy Wong)</p>
+              <p class="site-description motion-element" itemprop="description">I hurry and do not delay to keep your commandments.(PSM119:60)</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">103</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">25</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/higoge" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://weibo.com/higoge" target="_blank" title="Weibo">
+                    
+                      <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-globe"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://pan.baidu.com/s/1o8ubedW" title="汪汪的网盘(提取密码xo9s 解压密码higoge)" target="_blank">汪汪的网盘(提取密码xo9s 解压密码higoge)</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://coolshell.cn/" title="酷壳" target="_blank">酷壳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.ruanyifeng.com/blog/" title="阮一峰的网络日志" target="_blank">阮一峰的网络日志</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://unbug.github.io/codelf/" title="CODELF" target="_blank">CODELF</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.liaoxuefeng.com/" title="廖雪峰的官方网站" target="_blank">廖雪峰的官方网站</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#环境"><span class="nav-number">1.</span> <span class="nav-text"><a href="#&#x73AF;&#x5883;" class="headerlink" title="&#x73AF;&#x5883;"></a>&#x73AF;&#x5883;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#open-iscsi的安装"><span class="nav-number">2.</span> <span class="nav-text"><a href="#open-iscsi&#x7684;&#x5B89;&#x88C5;" class="headerlink" title="open-iscsi&#x7684;&#x5B89;&#x88C5;"></a>open-iscsi&#x7684;&#x5B89;&#x88C5;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开启停止open-iscsi服务"><span class="nav-number">3.</span> <span class="nav-text"><a href="#&#x5F00;&#x542F;&#x505C;&#x6B62;open-iscsi&#x670D;&#x52A1;" class="headerlink" title="&#x5F00;&#x542F;&#x505C;&#x6B62;open-iscsi&#x670D;&#x52A1;"></a>&#x5F00;&#x542F;&#x505C;&#x6B62;open-iscsi&#x670D;&#x52A1;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#登录登出iSCSI"><span class="nav-number">4.</span> <span class="nav-text"><a href="#&#x767B;&#x5F55;&#x767B;&#x51FA;iSCSI" class="headerlink" title="&#x767B;&#x5F55;&#x767B;&#x51FA;iSCSI"></a>&#x767B;&#x5F55;&#x767B;&#x51FA;iSCSI</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#带用户名和密码的target登录"><span class="nav-number">5.</span> <span class="nav-text"><a href="#&#x5E26;&#x7528;&#x6237;&#x540D;&#x548C;&#x5BC6;&#x7801;&#x7684;target&#x767B;&#x5F55;" class="headerlink" title="&#x5E26;&#x7528;&#x6237;&#x540D;&#x548C;&#x5BC6;&#x7801;&#x7684;target&#x767B;&#x5F55;"></a>&#x5E26;&#x7528;&#x6237;&#x540D;&#x548C;&#x5BC6;&#x7801;&#x7684;target&#x767B;&#x5F55;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Samba-3-4-0的安装"><span class="nav-number">6.</span> <span class="nav-text"><a href="#Samba-3-4-0&#x7684;&#x5B89;&#x88C5;" class="headerlink" title="Samba-3.4.0&#x7684;&#x5B89;&#x88C5;"></a>Samba-3.4.0&#x7684;&#x5B89;&#x88C5;</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">挨踢汪汪 (Jeremy Wong)</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1268103735&web_id=1268103735" language="JavaScript"></script>
+  </div>
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
