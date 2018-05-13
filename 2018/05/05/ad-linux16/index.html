@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.3" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/fv1.ico?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/fv1.ico?v=5.1.3">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/fv1.ico?v=5.1.3">
+
+
+  <link rel="mask-icon" href="/images/fv1.ico?v=5.1.3" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Linux,Oracle," />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Learnit" type="application/atom+xml" />
+
+
+
+
+
+
+<meta name="description" content="本文介绍CentOS6.9下Oracle 11gr2的静默安装。">
+<meta name="keywords" content="Linux,Oracle">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux进阶16：Linux下Oracle静默安装及配置">
+<meta property="og:url" content="http://higoge.github.io/2018/05/05/ad-linux16/index.html">
+<meta property="og:site_name" content="Learnit">
+<meta property="og:description" content="本文介绍CentOS6.9下Oracle 11gr2的静默安装。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-05-13T12:29:28.612Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux进阶16：Linux下Oracle静默安装及配置">
+<meta name="twitter:description" content="本文介绍CentOS6.9下Oracle 11gr2的静默安装。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.3',
+    sidebar: {"display":"always","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://higoge.github.io/2018/05/05/ad-linux16/"/>
+
+
+
+
+
+  <title>Linux进阶16：Linux下Oracle静默安装及配置 | Learnit</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+
+  <div class="container  page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Learnit</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">挨踢汪汪的杂货店</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://higoge.github.io/2018/05/05/ad-linux16/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="挨踢汪汪 (Jeremy Wong)">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/author.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Learnit">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Linux进阶16：Linux下Oracle静默安装及配置</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-05T15:46:35+08:00">
+                2018-05-05
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux进阶/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux进阶</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本文介绍CentOS6.9下Oracle 11gr2的静默安装。</p>
+<a id="more"></a>
+<h3 id="环境要求"><a href="#环境要求" class="headerlink" title="环境要求"></a>环境要求</h3><ul>
+<li>内存：1G，推荐2G。</li>
+<li>Swap空间：内存的1至1.5倍。</li>
+<li>磁盘空间：<code>/tmp</code>至少1G，软件空间4.7G，数据空间1.7G。</li>
+</ul>
+<p>本文CentOS6.9采用最小化(Minimal)的方式安装，2个物理CPU，每个2线程，2G内存，60G硬盘，2G的Swap，30G的<code>/</code>目录，28G的<code>/home</code>目录</p>
+<h3 id="软件包安装"><a href="#软件包安装" class="headerlink" title="软件包安装"></a>软件包安装</h3><p>配置Yum源，可以参考<a href="https://higoge.github.io/2017/03/05/ad-linux09/">Linux进阶09：CentOS的Yum库设置</a>。<br>安装软件包。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo yum install binutils compat-libcap1 compat-libstdc++-33 \</span><br><span class="line">    gcc gcc-c++ glibc glibc glibc-devel glibc-devel ksh libgcc \</span><br><span class="line">    libstdc++ libstdc++-devel libaio libaio-devel make sysstat unzip -y</span><br></pre></td></tr></table></figure></p>
+<h3 id="新建用户和组"><a href="#新建用户和组" class="headerlink" title="新建用户和组"></a>新建用户和组</h3><p>新建组<code>oinstall</code>和<code>dba</code>，以及<code>oracle</code>用户。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">$ sudo groupadd oinstall</span><br><span class="line">$ sudo groupadd dba</span><br><span class="line">$ sudo useradd -g oinstall -G dba oracle</span><br><span class="line">$ sudo passwd oracle</span><br></pre></td></tr></table></figure></p>
+<h3 id="修改内核参数"><a href="#修改内核参数" class="headerlink" title="修改内核参数"></a>修改内核参数</h3><p><code>/etc/sysctl.conf</code>最后一行添加如下内容。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">kernel.shmmni = 4096</span><br><span class="line">kernel.sem = 250 32000 100 128</span><br><span class="line">net.ipv4.ip_local_port_range = 9000 65500</span><br><span class="line">net.core.rmem_default = 262144</span><br><span class="line">net.core.rmem_max = 4194304</span><br><span class="line">net.core.wmem_default = 262144</span><br><span class="line">net.core.wmem_max = 1048576</span><br></pre></td></tr></table></figure></p>
+<p>执行<code>sudo sysctl -p</code>使内核参数生效。</p>
+<h3 id="调整会话限制"><a href="#调整会话限制" class="headerlink" title="调整会话限制"></a>调整会话限制</h3><p><code>/etc/pam.d/login</code>最后一行添加如下内容。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">session    required     pam_limits.so</span><br></pre></td></tr></table></figure></p>
+<h3 id="限制设置"><a href="#限制设置" class="headerlink" title="限制设置"></a>限制设置</h3><p><code>/etc/security/limits.conf</code>最后一行添加如下内容。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">oracle        soft    nproc    8192</span><br><span class="line">oracle        hard    nproc    16384</span><br><span class="line">oracle        soft    nofile   32768</span><br><span class="line">oracle        hard    nofile   65536</span><br></pre></td></tr></table></figure></p>
+<h3 id="添加IP地址到host"><a href="#添加IP地址到host" class="headerlink" title="添加IP地址到host"></a>添加IP地址到host</h3><p>在<code>/etc/hosts</code>中明确添加域名与本机IP地址的映射。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"># hostname</span><br><span class="line">CentOS6</span><br><span class="line"># vi /etc/hosts</span><br><span class="line">192.168.80.6 CentOS6</span><br></pre></td></tr></table></figure></p>
+<h3 id="新建文件"><a href="#新建文件" class="headerlink" title="新建文件"></a>新建文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo vi /etc/oraInst.loc</span><br><span class="line">inventory_loc=/home/oracle/oracle/oraInventory</span><br><span class="line">inst_group=oinstall</span><br></pre></td></tr></table></figure>
+<h3 id="安装准备"><a href="#安装准备" class="headerlink" title="安装准备"></a>安装准备</h3><p>切换到<code>oracle</code>用户，本步骤后所有操作均为<code>oracle</code>用户。<br>新建oracle文件夹，作为软件安装目录。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ su - oracle</span><br><span class="line">$ mkdir oracle</span><br></pre></td></tr></table></figure></p>
+<p>修改环境变量，并生效。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">$ vi ~/.bash_profile</span><br><span class="line">export PATH=$PATH:/home/oracle/oracle/product/11gr2/dbhome_1/bin</span><br><span class="line">export ORACLE_HOME=/home/oracle/oracle/product/11gr2/dbhome_1</span><br><span class="line">export ORACLE_SID=higoge</span><br><span class="line">export ORACLE_UNQNAME=$ORACLE_SID</span><br><span class="line">$ source ~/.bash_profile</span><br></pre></td></tr></table></figure></p>
+<h3 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h3><p>下载<a href="http://download.oracle.com/otn/linux/oracle11g/R2/linux.x64_11gR2_database_1of2.zip" target="_blank" rel="noopener">linux.x64_11gR2_database_1of2.zip</a>以及<a href="http://download.oracle.com/otn/linux/oracle11g/R2/linux.x64_11gR2_database_2of2.zip" target="_blank" rel="noopener">linux.x64_11gR2_database_2of2.zip</a>，并进行解压和安装(将下载地址复制到迅雷后即可下载，无需登录，下载后改名即可)。本文解压到<code>/home/oracle/backup</code>目录下。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="built_in">cd</span> ~/backup</span><br><span class="line">$ unzip linux.x64_11gR2_database_1of2.zip</span><br><span class="line">$ unzip linux.x64_11gR2_database_2of2.zip</span><br><span class="line">$ <span class="built_in">cd</span> database</span><br><span class="line">$ ./runInstaller -silent -debug -force -ignorePrereq \</span><br><span class="line">DECLINE_SECURITY_UPDATES=<span class="literal">true</span> \</span><br><span class="line">oracle.install.option=INSTALL_DB_SWONLY \</span><br><span class="line">UNIX_GROUP_NAME=oinstall \</span><br><span class="line">INVENTORY_LOCATION=/home/oracle/oracle/oraInventory \</span><br><span class="line">ORACLE_HOME=/home/oracle/oracle/product/11gr2/dbhome_1 \</span><br><span class="line">ORACLE_BASE=/home/oracle/oracle \</span><br><span class="line">oracle.install.db.InstallEdition=EE \</span><br><span class="line">oracle.install.db.EEOptionsSelection=<span class="literal">true</span> \</span><br><span class="line">oracle.install.db.optionalComponents=oracle.rdbms.partitioning:11.2.0.3.0,oracle.oraolap:11.2.0.3.0,oracle.rdbms.dm:11.2.0.3.0,oracle.rdbms.lbac:11.2.0.3.0,oracle.rdbms.rat:11.2.0.3.0 \</span><br><span class="line">oracle.install.db.DBA_GROUP=dba \</span><br><span class="line">oracle.install.db.OPER_GROUP=dba \</span><br><span class="line">oracle.install.db.isRACOneInstall=<span class="literal">false</span></span><br></pre></td></tr></table></figure></p>
+<p>执行到<code>[OUISetupDriver.JobExecutorThread] [ 2018-05-08 01:32:36.271 CST ] [UnixSystem.getCSSConfigType:2387]  configType=null</code>会出现假死状态，请继续等待，建议新起一个窗口使用<code>top</code>命令监控下。<br>出现以下信息表示成功。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">The following configuration scripts need to be executed as the <span class="string">"root"</span> user.</span><br><span class="line"> <span class="comment">#!/bin/sh</span></span><br><span class="line"> <span class="comment">#Root scripts to run</span></span><br><span class="line"></span><br><span class="line">/home/oracle/oracle/product/11gr2/dbhome_1/root.sh</span><br><span class="line">To execute the configuration scripts:</span><br><span class="line">         1. Open a terminal window</span><br><span class="line">         2. Log <span class="keyword">in</span> as <span class="string">"root"</span></span><br><span class="line">         3. Run the scripts</span><br><span class="line">         4. Return to this window and hit <span class="string">"Enter"</span> key to <span class="built_in">continue</span></span><br><span class="line"></span><br><span class="line">Successfully Setup Software.</span><br></pre></td></tr></table></figure></p>
+<p><code>root</code>用户执行如下脚本，或直接使用<code>sudo</code>执行。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo /home/oracle/oracle/product/11gr2/dbhome_1/root.sh</span><br></pre></td></tr></table></figure></p>
+<h3 id="启动监听"><a href="#启动监听" class="headerlink" title="启动监听"></a>启动监听</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ netca /silent /responsefile /home/oracle/backup/database/response/netca.rsp</span><br></pre></td></tr></table></figure>
+<p>报错，<code>Listener start failed.</code>以及<code>The exit code is 1</code>。<br>此时会生成<code>listener.ora</code>，对此文件进行编辑，修改为本机IP地址。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ vi /home/oracle/oracle/product/11gr2/dbhome_1/network/admin/listener.ora</span><br><span class="line">      (ADDRESS = (PROTOCOL = TCP)(HOST = 192.168.80.6)(PORT = 1521))</span><br></pre></td></tr></table></figure></p>
+<p>再次运行，成功。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ netca /silent /responsefile /home/oracle/backup/database/response/netca.rsp</span><br></pre></td></tr></table></figure></p>
+<p>会有<code>Oracle Net Services configuration successful. The exit code is 0</code>字样。<br>启动服务，并查看状态。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ lsnrctl start</span><br><span class="line">$ lsnrctl status</span><br></pre></td></tr></table></figure></p>
+<p>启动端口是<code>1521</code>。</p>
+<h3 id="配置数据库"><a href="#配置数据库" class="headerlink" title="配置数据库"></a>配置数据库</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">$ cp ~/backup/database/response/dbca.rsp ~</span><br><span class="line">vi ~/dbca.rsp</span><br><span class="line">GDBNAME = <span class="string">"higoge.CentOS6"</span> <span class="comment"># 全局数据库的名字=SID+主机域名</span></span><br><span class="line">SID=<span class="string">"higoge"</span> <span class="comment"># SID</span></span><br><span class="line">CHARACTERSET=<span class="string">"AL32UTF8"</span> <span class="comment"># 编码</span></span><br><span class="line">NATIONALCHARACTERSET=<span class="string">"UTF8"</span> <span class="comment"># 编码</span></span><br><span class="line">SYSPASSWORD = <span class="string">"LearnIT"</span>    <span class="comment"># 密码</span></span><br><span class="line">SYSTEMPASSWORD = <span class="string">"LearnIT"</span>  <span class="comment"># 密码</span></span><br></pre></td></tr></table></figure>
+<p>静默安装数据库。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">$ dbca -silent -responseFile ~/dbca.rsp</span><br><span class="line">Copying database files</span><br><span class="line">1% complete</span><br><span class="line">3% complete</span><br><span class="line">11% complete</span><br><span class="line">18% complete</span><br><span class="line">26% complete</span><br><span class="line">37% complete</span><br><span class="line">Creating and starting Oracle instance</span><br><span class="line">40% complete</span><br><span class="line">45% complete</span><br><span class="line">50% complete</span><br><span class="line">55% complete</span><br><span class="line">56% complete</span><br><span class="line">60% complete</span><br><span class="line">62% complete</span><br><span class="line">Completing Database Creation</span><br><span class="line">66% complete</span><br><span class="line">70% complete</span><br><span class="line">73% complete</span><br><span class="line">85% complete</span><br><span class="line">96% complete</span><br><span class="line">100% complete</span><br><span class="line">Look at the <span class="built_in">log</span> file <span class="string">"/home/oracle/oracle/cfgtoollogs/dbca/higoge/higoge.log"</span> <span class="keyword">for</span> further details.</span><br></pre></td></tr></table></figure></p>
+<h3 id="创建用户"><a href="#创建用户" class="headerlink" title="创建用户"></a>创建用户</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">$ sqlplus /nolog</span><br><span class="line">SQL&gt; conn / as sysdba</span><br><span class="line">SQL&gt; startup</span><br><span class="line">...</span><br><span class="line">Database mounted.</span><br><span class="line">Database opened.</span><br><span class="line"></span><br><span class="line">SQL&gt; create user jeremy identified by learnit default tablespace USERS temporary tablespace TEMP profile DEFAULT;</span><br><span class="line">SQL&gt; grant connect to jeremy;</span><br><span class="line">SQL&gt; grant resource to jeremy;</span><br><span class="line">SQL&gt; grant create any procedure to jeremy;</span><br><span class="line">SQL&gt; grant create any view to jeremy;</span><br><span class="line">SQL&gt; grant debug connect session to jeremy;</span><br><span class="line">SQL&gt; grant unlimited tablespace to jeremy;</span><br></pre></td></tr></table></figure>
+<p>说明：创建用户<code>jeremy</code>，密码<code>learnit</code>，默认表空间<code>USERS</code>，临时表空间<code>TEMP</code>，概要文件<code>DEFAULT</code>。角色权限为<code>connect</code>和<code>resource</code>。系统权限为<code>create any procedure</code>，<code>create any view</code>，<code>debug connect session</code>，<code>unlimited tablespace</code>。</p>
+<h3 id="远程登录"><a href="#远程登录" class="headerlink" title="远程登录"></a>远程登录</h3><p>使用PL/SQL，登录数据库为<code>(description=(address=(protocol=tcp)(host=192.168.80.6)(port=1521))(connect_data=(sid=higoge)))</code>，连接为<code>Normal</code>。<br>使用Navicat Premium，登录SID为<code>higoge</code>，其他信息输入即可。</p>
+<h3 id="自启动服务"><a href="#自启动服务" class="headerlink" title="自启动服务"></a>自启动服务</h3><p>每次服务器重启后，都需要手动执行<code>lsnrctl start</code>以及使用<code>sqlplus</code>连接数据库后，执行<code>startup</code>，可以编写自启动脚本，加入到系统<code>service</code>中。<br><code>/etc/oratab</code>中，<code>higoge:/home/oracle/oracle/product/11gr2/dbhome_1:N</code>改为<code>higoge:/home/oracle/oracle/product/11gr2/dbhome_1:Y</code>。<br><code>/home/oracle/oracle/product/11gr2/dbhome_1/bin/</code>下的<code>dbstart</code>和<code>dbshut</code>中，<code>ORACLE_HOME_LISTNER=$1</code>改为<code>$ORACLE_HOME</code>。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#ORACLE_HOME_LISTNER=$1</span></span><br><span class="line">ORACLE_HOME_LISTNER=<span class="variable">$ORACLE_HOME</span></span><br></pre></td></tr></table></figure></p>
+<p><code>root</code>用户新建<code>/etc/init.d/oracledb</code>文件，内容如下。<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#!/bin/bash</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="comment"># chkconfig: 345 10 90</span></span><br><span class="line"><span class="comment"># description: Oracle auto start-stop script. Edit by higoge.</span></span><br><span class="line"><span class="comment"># /etc/init.d/oracledb</span></span><br><span class="line"><span class="comment">#</span></span><br><span class="line"><span class="built_in">export</span> ORACLE_HOME=/home/oracle/oracle/product/11gr2/dbhome_1/</span><br><span class="line"><span class="built_in">export</span> ORACLE_SID=higoge</span><br><span class="line"><span class="built_in">export</span> ORACLE_UNQNAME=<span class="variable">$ORACLE_SID</span></span><br><span class="line"><span class="built_in">export</span> PATH=<span class="variable">$PATH</span>:<span class="variable">$ORACLE_HOME</span>/bin</span><br><span class="line">ORA_OWNR=oracle</span><br><span class="line"></span><br><span class="line"><span class="comment"># if the executables do not exist -- display error</span></span><br><span class="line"><span class="keyword">if</span> [ ! -f <span class="variable">$ORACLE_HOME</span>/bin/dbstart -o ! -d <span class="variable">$ORACLE_HOME</span> ]</span><br><span class="line">  <span class="keyword">then</span></span><br><span class="line">    <span class="built_in">echo</span> <span class="string">"Oracle startup: cannot start"</span></span><br><span class="line">    <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">fi</span></span><br><span class="line"><span class="comment"># depending on parameter -- startup, shutdown, restart</span></span><br><span class="line"><span class="comment"># of the instance and listener or usage display</span></span><br><span class="line"><span class="keyword">case</span> <span class="string">"<span class="variable">$1</span>"</span> <span class="keyword">in</span></span><br><span class="line">start)</span><br><span class="line">  <span class="comment"># Oracle listener and instance startup</span></span><br><span class="line">  <span class="built_in">echo</span> -n <span class="string">"Starting Oracle: "</span></span><br><span class="line">  su <span class="variable">$ORA_OWNR</span> -c <span class="string">"<span class="variable">$ORACLE_HOME</span>/bin/dbstart"</span></span><br><span class="line">  su <span class="variable">$ORA_OWNR</span> -c <span class="string">"<span class="variable">$ORACLE_HOME</span>/bin/lsnrctl start"</span></span><br><span class="line">  touch /var/lock/oracle</span><br><span class="line">  su <span class="variable">$ORA_OWNR</span> -c <span class="variable">$ORACLE_HOME</span>/bin/emctl start dbconsole</span><br><span class="line">  <span class="built_in">echo</span> <span class="string">"OK"</span></span><br><span class="line">;;</span><br><span class="line">stop)</span><br><span class="line">  <span class="comment"># Oracle listener and instance shutdown</span></span><br><span class="line">  <span class="built_in">echo</span> -n <span class="string">"Shutdown Oracle: "</span></span><br><span class="line">  su <span class="variable">$ORA_OWNR</span> -c <span class="string">"<span class="variable">$ORACLE_HOME</span>/bin/lsnrctl stop"</span></span><br><span class="line">  su <span class="variable">$ORA_OWNR</span> -c <span class="variable">$ORACLE_HOME</span>/bin/dbshut</span><br><span class="line">  rm -f /var/lock/oracle</span><br><span class="line">  su <span class="variable">$ORA_OWNR</span> -c <span class="variable">$ORACLE_HOME</span>/bin/emctl stop dbconsole</span><br><span class="line">  <span class="built_in">echo</span> <span class="string">"OK"</span></span><br><span class="line">;;</span><br><span class="line">reload|restart)</span><br><span class="line">  <span class="variable">$0</span> stop</span><br><span class="line">  <span class="variable">$0</span> start</span><br><span class="line">;;</span><br><span class="line">****)</span><br><span class="line">  <span class="built_in">echo</span> <span class="string">"Usage: service oracledb start|stop|restart|reload"</span></span><br><span class="line">  <span class="built_in">exit</span> 1</span><br><span class="line"><span class="keyword">esac</span></span><br><span class="line"><span class="built_in">exit</span> 0</span><br></pre></td></tr></table></figure></p>
+<p>配置权限<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo chmod 755 /etc/init.d/oracledb</span><br><span class="line">$ sudo chkconfig oracledb on</span><br></pre></td></tr></table></figure></p>
+<p>重启服务验证。</p>
+<p>~~ EOF ~~</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag"># Linux</a>
+          
+            <a href="/tags/Oracle/" rel="tag"># Oracle</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/01/28/ad-linux15/" rel="next" title="Linux进阶15：Linux下MySQL数据库安装及配置">
+                <i class="fa fa-chevron-left"></i> Linux进阶15：Linux下MySQL数据库安装及配置
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/9999/12/31/toc/" rel="prev" title="[置顶]-博客目录">
+                [置顶]-博客目录 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image"
+                src="/images/author.jpg"
+                alt="挨踢汪汪 (Jeremy Wong)" />
+            
+              <p class="site-author-name" itemprop="name">挨踢汪汪 (Jeremy Wong)</p>
+              <p class="site-description motion-element" itemprop="description">I hurry and do not delay to keep your commandments.(PSM119:60)</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">104</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">27</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+            <div class="feed-link motion-element">
+              <a href="/atom.xml" rel="alternate">
+                <i class="fa fa-rss"></i>
+                RSS
+              </a>
+            </div>
+          
+
+          <div class="links-of-author motion-element">
+            
+              
+                <span class="links-of-author-item">
+                  <a href="https://github.com/higoge" target="_blank" title="GitHub">
+                    
+                      <i class="fa fa-fw fa-github"></i>GitHub</a>
+                </span>
+              
+                <span class="links-of-author-item">
+                  <a href="http://weibo.com/higoge" target="_blank" title="Weibo">
+                    
+                      <i class="fa fa-fw fa-weibo"></i>Weibo</a>
+                </span>
+              
+            
+          </div>
+
+          
+          
+
+          
+          
+            <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+              <div class="links-of-blogroll-title">
+                <i class="fa  fa-fw fa-globe"></i>
+                Links
+              </div>
+              <ul class="links-of-blogroll-list">
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://pan.baidu.com/s/1o8ubedW" title="汪汪的网盘(提取密码xo9s 解压密码higoge)" target="_blank">汪汪的网盘(提取密码xo9s 解压密码higoge)</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://coolshell.cn/" title="酷壳" target="_blank">酷壳</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.ruanyifeng.com/blog/" title="阮一峰的网络日志" target="_blank">阮一峰的网络日志</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://unbug.github.io/codelf/" title="CODELF" target="_blank">CODELF</a>
+                  </li>
+                
+                  <li class="links-of-blogroll-item">
+                    <a href="http://www.liaoxuefeng.com/" title="廖雪峰的官方网站" target="_blank">廖雪峰的官方网站</a>
+                  </li>
+                
+              </ul>
+            </div>
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#环境要求"><span class="nav-number">1.</span> <span class="nav-text"><a href="#&#x73AF;&#x5883;&#x8981;&#x6C42;" class="headerlink" title="&#x73AF;&#x5883;&#x8981;&#x6C42;"></a>&#x73AF;&#x5883;&#x8981;&#x6C42;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#软件包安装"><span class="nav-number">2.</span> <span class="nav-text"><a href="#&#x8F6F;&#x4EF6;&#x5305;&#x5B89;&#x88C5;" class="headerlink" title="&#x8F6F;&#x4EF6;&#x5305;&#x5B89;&#x88C5;"></a>&#x8F6F;&#x4EF6;&#x5305;&#x5B89;&#x88C5;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#新建用户和组"><span class="nav-number">3.</span> <span class="nav-text"><a href="#&#x65B0;&#x5EFA;&#x7528;&#x6237;&#x548C;&#x7EC4;" class="headerlink" title="&#x65B0;&#x5EFA;&#x7528;&#x6237;&#x548C;&#x7EC4;"></a>&#x65B0;&#x5EFA;&#x7528;&#x6237;&#x548C;&#x7EC4;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改内核参数"><span class="nav-number">4.</span> <span class="nav-text"><a href="#&#x4FEE;&#x6539;&#x5185;&#x6838;&#x53C2;&#x6570;" class="headerlink" title="&#x4FEE;&#x6539;&#x5185;&#x6838;&#x53C2;&#x6570;"></a>&#x4FEE;&#x6539;&#x5185;&#x6838;&#x53C2;&#x6570;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#调整会话限制"><span class="nav-number">5.</span> <span class="nav-text"><a href="#&#x8C03;&#x6574;&#x4F1A;&#x8BDD;&#x9650;&#x5236;" class="headerlink" title="&#x8C03;&#x6574;&#x4F1A;&#x8BDD;&#x9650;&#x5236;"></a>&#x8C03;&#x6574;&#x4F1A;&#x8BDD;&#x9650;&#x5236;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#限制设置"><span class="nav-number">6.</span> <span class="nav-text"><a href="#&#x9650;&#x5236;&#x8BBE;&#x7F6E;" class="headerlink" title="&#x9650;&#x5236;&#x8BBE;&#x7F6E;"></a>&#x9650;&#x5236;&#x8BBE;&#x7F6E;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加IP地址到host"><span class="nav-number">7.</span> <span class="nav-text"><a href="#&#x6DFB;&#x52A0;IP&#x5730;&#x5740;&#x5230;host" class="headerlink" title="&#x6DFB;&#x52A0;IP&#x5730;&#x5740;&#x5230;host"></a>&#x6DFB;&#x52A0;IP&#x5730;&#x5740;&#x5230;host</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#新建文件"><span class="nav-number">8.</span> <span class="nav-text"><a href="#&#x65B0;&#x5EFA;&#x6587;&#x4EF6;" class="headerlink" title="&#x65B0;&#x5EFA;&#x6587;&#x4EF6;"></a>&#x65B0;&#x5EFA;&#x6587;&#x4EF6;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装准备"><span class="nav-number">9.</span> <span class="nav-text"><a href="#&#x5B89;&#x88C5;&#x51C6;&#x5907;" class="headerlink" title="&#x5B89;&#x88C5;&#x51C6;&#x5907;"></a>&#x5B89;&#x88C5;&#x51C6;&#x5907;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装"><span class="nav-number">10.</span> <span class="nav-text"><a href="#&#x5B89;&#x88C5;" class="headerlink" title="&#x5B89;&#x88C5;"></a>&#x5B89;&#x88C5;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动监听"><span class="nav-number">11.</span> <span class="nav-text"><a href="#&#x542F;&#x52A8;&#x76D1;&#x542C;" class="headerlink" title="&#x542F;&#x52A8;&#x76D1;&#x542C;"></a>&#x542F;&#x52A8;&#x76D1;&#x542C;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置数据库"><span class="nav-number">12.</span> <span class="nav-text"><a href="#&#x914D;&#x7F6E;&#x6570;&#x636E;&#x5E93;" class="headerlink" title="&#x914D;&#x7F6E;&#x6570;&#x636E;&#x5E93;"></a>&#x914D;&#x7F6E;&#x6570;&#x636E;&#x5E93;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建用户"><span class="nav-number">13.</span> <span class="nav-text"><a href="#&#x521B;&#x5EFA;&#x7528;&#x6237;" class="headerlink" title="&#x521B;&#x5EFA;&#x7528;&#x6237;"></a>&#x521B;&#x5EFA;&#x7528;&#x6237;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#远程登录"><span class="nav-number">14.</span> <span class="nav-text"><a href="#&#x8FDC;&#x7A0B;&#x767B;&#x5F55;" class="headerlink" title="&#x8FDC;&#x7A0B;&#x767B;&#x5F55;"></a>&#x8FDC;&#x7A0B;&#x767B;&#x5F55;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#自启动服务"><span class="nav-number">15.</span> <span class="nav-text"><a href="#&#x81EA;&#x542F;&#x52A8;&#x670D;&#x52A1;" class="headerlink" title="&#x81EA;&#x542F;&#x52A8;&#x670D;&#x52A1;"></a>&#x81EA;&#x542F;&#x52A8;&#x670D;&#x52A1;</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2015 &mdash; <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">挨踢汪汪 (Jeremy Wong)</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a></div>
+
+
+
+
+        
+
+
+
+
+
+
+
+  <div style="display: none;">
+    <script src="//s95.cnzz.com/z_stat.php?id=1268103735&web_id=1268103735" language="JavaScript"></script>
+  </div>
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.3"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.3"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.3"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.3"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.3"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
